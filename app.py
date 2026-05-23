@@ -6,17 +6,17 @@ bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.reply_to(message, "Send Video 🎬")
+    bot.reply_to(message, "Send 2GB Video 🎬")
 
 @bot.message_handler(content_types=['video','document'])
-def video(message):
+def save_video(message):
 
-    file_id = message.video.file_id if message.video else message.document.file_id
-
-    bot.reply_to(
-        message,
-        f"Saved ✅\n\nFile ID:\n{file_id}"
+    file_id = (
+        message.video.file_id
+        if message.video
+        else message.document.file_id
     )
 
-print("Bot Started...")
+    bot.reply_to(message, f"Saved ✅\n\n{file_id}")
+
 bot.infinity_polling()
