@@ -6,20 +6,17 @@ bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.reply_to(message, "Send Video URL")
+    bot.reply_to(message, "Send Video 🎬")
 
-@bot.message_handler(func=lambda m: True)
-def get_link(message):
+@bot.message_handler(content_types=['video','document'])
+def video(message):
 
-    video_url = message.text
+    file_id = message.video.file_id if message.video else message.document.file_id
 
-    mx_link = f"""
-Open In MX Player👇
-
-intent://{video_url}#Intent;package=com.mxtech.videoplayer.ad;end
-"""
-
-    bot.reply_to(message, mx_link)
+    bot.reply_to(
+        message,
+        f"Saved ✅\n\nFile ID:\n{file_id}"
+    )
 
 print("Bot Started...")
 bot.infinity_polling()
