@@ -9,18 +9,21 @@ def start(message):
     bot.reply_to(message, "Send Video 🎬")
 
 @bot.message_handler(content_types=['video', 'document'])
-def get_video(message):
+def video(message):
 
-    if message.video:
-        file_id = message.video.file_id
-    else:
-        file_id = message.document.file_id
+    try:
+        file_id = message.video.file_id if message.video else message.document.file_id
 
-    file_info = bot.get_file(file_id)
+        file_info = bot.get_file(file_id)
 
-    link = f"https://api.telegram.org/file/bot{TOKEN}/{file_info.file_path}"
+        file_path = file_info.file_path
 
-    bot.reply_to(message, f"Download Link ✅\n\n{link}")
+        download_url = f"https://api.telegram.org/file/bot{TOKEN}/{file_path}"
+
+        bot.reply_to(message, "Download Link 👇\n" + download_url)
+
+    except Exception as e:
+        bot.reply_to(message, f"Error: {e}")
 
 print("Bot Started...")
 bot.infinity_polling()
